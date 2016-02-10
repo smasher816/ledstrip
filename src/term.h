@@ -1,8 +1,9 @@
 #pragma once
-#include "stdio.h"
+#include <avr/pgmspace.h>
+#include <stdio.h>
 
-#define print(x) fputs(x, stdout)
-#define println(x) puts(x)
+#define print(x) fputs_P(PSTR(x), stdout)
+#define println(x) puts_P(PSTR(x))
 
 #define VERBOSE(x) puts("\e[0;34m" x "\e[0m") //blue
 #define DEBUG(x)   puts("\e[0;32m" x "\e[0m") //green

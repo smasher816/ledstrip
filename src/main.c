@@ -14,14 +14,14 @@ void version() {
 int free_ram() {
 	extern int __heap_start, *__brkval;
 	int stack;
-    int free = (int)&stack - (__brkval==0 ? (int)&__heap_start : (int)__brkval);
+	int free = (int)&stack - (__brkval==0 ? (int)&__heap_start : (int)__brkval);
 	return free;
 }
 
 void ram() {
 	char s[5];
 	itoa(free_ram(), s, 10);
-	println(s);
+	puts(s);
 }
 
 void reset() {

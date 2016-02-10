@@ -12,13 +12,13 @@ int bufpos;
 void term_help() {
 	println("Valid commands are:");
 	for(unsigned int i=0; i<ARRAYLEN(commands); i++) {
-		println(commands[i].name);
+		puts_P(commands[i].name);
 	}
 }
 
 void term_process() {
 	for(unsigned int i=0; i<ARRAYLEN(commands); i++) {
-		if (strcmp(commands[i].name, buffer)==0) {
+		if (strcmp_P(buffer, commands[i].name)==0) {
 			commands[i].handler();
 			return;
 		}
