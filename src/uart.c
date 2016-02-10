@@ -1,4 +1,3 @@
-#include <avr/io.h>
 #include "uart.h"
 
 FILE uart_output = FDEV_SETUP_STREAM(uart_putchar, NULL, _FDEV_SETUP_WRITE);
@@ -30,3 +29,4 @@ int uart_getchar(FILE *stream __attribute__((unused))) {
     loop_until_bit_is_set(UCSR0A, RXC0);
     return UDR0;
 }
+

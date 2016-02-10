@@ -1,3 +1,5 @@
+#pragma once
+#include <avr/io.h>
 #include <stdio.h>
 
 #define BAUD_TOL 3
@@ -7,6 +9,9 @@
 void uart_init(void);
 int uart_putchar(char, FILE *);
 int uart_getchar(FILE *stream);
+static inline int uart_available() {
+    return bit_is_set(UCSR0A, RXC0);
+}
 
 extern FILE uart_output;
 extern FILE uart_input;
