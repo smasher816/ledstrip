@@ -10,9 +10,9 @@ char buffer[BUFFER_SIZE];
 int bufpos;
 
 void term_help() {
-	puts("Valid commands are:");
+	println("Valid commands are:");
 	for(unsigned int i=0; i<ARRAYLEN(commands); i++) {
-		puts(commands[i].name);
+		println(commands[i].name);
 	}
 }
 
@@ -23,7 +23,7 @@ void term_process() {
 			return;
 		}
 	}
-	puts("Unknown command");
+	ERR("Unknown command");
 }
 
 void term_read() {
@@ -50,7 +50,7 @@ void term_read() {
 				term_prompt();
 			} else if (c=='\b' || c==127) {
 				if (bufpos > 0) {
-					fputs(VT_BS, stdout);
+					print(VT_BS);
 					bufpos--;
 				}
 			} else if (c>=32 && c<=126) {

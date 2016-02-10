@@ -14,7 +14,7 @@ int main(void) {
 	stdout = &uart_output;
     stdin  = &uart_input;
 	term_clear();
-	puts("Hello World!\n");
+	println("Hello World!");
 
 	DDRB |= _BV(DDB1); //set PB1 to output
 
