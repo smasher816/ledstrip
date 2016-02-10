@@ -22,6 +22,7 @@ set(AVRDUDE_FLAGS "-p${MCU}" "-c${PROGRAMMER}" "-P${PORT}" "-b${BAUDRATE}" "${PR
 add_executable("ledstrip" "test.c")
 add_custom_command(TARGET "ledstrip" POST_BUILD
 	COMMAND avr-objcopy -O ihex -R .eeprom ledstrip ledstrip.hex
+	COMMAND avr-size --format=avr --mcu=${MCU} ledstrip
 )
 
 add_custom_target(upload
