@@ -5,6 +5,10 @@
 
 #define LED_PIN PORTB1
 
+void toggle_led() {
+	PORTB ^= _BV(LED_PIN); //toggle led
+}
+
 int main(void) {
 	uart_init();
 	stdout = &uart_output;
@@ -16,7 +20,6 @@ int main(void) {
 
 	term_prompt();
 	while(1) {
-			if (term_read())
-				PORTB ^= _BV(LED_PIN); //toggle led
+			term_read();
 	}
 }

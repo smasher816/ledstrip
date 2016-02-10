@@ -1,12 +1,32 @@
+#include <string.h>
 #include "term.h"
 #include "uart.h"
+#include "command.h"
 
 #define BUFFER_SIZE 16
+#define ARRAYLEN(a) (sizeof(a)/sizeof(a[0]))
 
 char buffer[BUFFER_SIZE];
 int bufpos;
 
-int term_read() {
+void term_help() {
+	puts("Valid commands are:");
+	for(unsigned int i=0; i<ARRAYLEN(commands); i++) {
+		puts(commands[i].name);
+	}
+}
+
+void term_process() {
+	for(unsigned int i=0; i<ARRAYLEN(commands); i++) {
+		if (strcmp(commands[i].name, buffer)==0) {
+			commands[i].handler();
+			return;
+		}
+	}
+	puts("Unknown command");
+}
+
+void term_read() {
 	char c;
 	static int k = 0;
 	while (uart_available()) {
@@ -26,9 +46,8 @@ int term_read() {
 				putchar('\n');
 				buffer[bufpos] = '\0';
 				bufpos = 0;
-				puts(buffer);
+				term_process();
 				term_prompt();
-				return 1;
 			} else if (c=='\b' || c==127) {
 				if (bufpos > 0) {
 					fputs(VT_BS, stdout);
@@ -44,5 +63,4 @@ int term_read() {
 			}
 		}
 	}
-	return 0;
 }
