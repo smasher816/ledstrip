@@ -5,5 +5,7 @@
 Command commands[] = {
 	{"help",  term_help},
 	{"clear", term_clear},
+	{"version", version},
+	{"ram", ram},
 	{"led", toggle_led}
 };
