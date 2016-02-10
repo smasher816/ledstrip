@@ -22,7 +22,8 @@ set(CMAKE_CXX_FLAGS "-mmcu=${MCU} -DF_CPU=${F_CPU} -DBAUD=${SERIAL_BAUD} ${COMPI
 #set(CMAKE_EXE_LINKER_FLAGS "-Wl,-u,vfprintf -lprintf_min")
 set(AVRDUDE_FLAGS "-p${MCU}" "-c${PROGRAMMER}" "-P${PROGRAMMER_PORT}" "-b${PROGRAMMER_BAUD}" "${PROGRAMMER_FLAGS}")
 
-add_executable("ledstrip" "main.c" "uart.c")
+file(GLOB_RECURSE SRC_FILES "src/*.c" "src/*.cpp")
+add_executable("ledstrip" ${SRC_FILES})
 add_custom_command(TARGET "ledstrip" POST_BUILD
 	COMMAND avr-objcopy -O ihex -R .eeprom ledstrip ledstrip.hex
 	COMMAND avr-size --format=avr --mcu=${MCU} ledstrip
