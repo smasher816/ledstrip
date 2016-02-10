@@ -5,3 +5,7 @@ cd build
 cmake ..
 make
 make upload
+
+Scripts
+
+flashall.sh - Flash a new chip to a working state
