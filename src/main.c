@@ -1,4 +1,5 @@
 #include <avr/io.h>
+#include <avr/wdt.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "uart.h"
@@ -23,11 +24,19 @@ void ram() {
 	println(s);
 }
 
+void reset() {
+	wdt_enable(WDTO_250MS);
+	while (1);
+}
+
 void toggle_led() {
 	PORTB ^= _BV(LED_PIN); //toggle led
 }
 
 int main(void) {
+	MCUSR = 0;
+	wdt_disable();
+
 	uart_init();
 	stdout = &uart_output;
     stdin  = &uart_input;

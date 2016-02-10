@@ -7,5 +7,6 @@ Command commands[] = {
 	{"clear", term_clear},
 	{"version", version},
 	{"ram", ram},
+	{"reset", reset},
 	{"led", toggle_led}
 };
