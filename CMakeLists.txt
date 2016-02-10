@@ -11,12 +11,13 @@ set(BAUDRATE "115200")
 set(EEPROM "ledstrip.eep")
 
 set(COMPILE_FLAGS "-Os -Wall -Wextra -Werror")
+set(PROGRAMMER_FLAGS "-V" "-xspifreq=7")
 
 set(CMAKE_C_COMPILER avr-gcc)
 set(CMAKE_CXX_COMPILER avr-g++)
 set(CMAKE_C_FLAGS "-mmcu=${MCU} -DF_CPU=${F_CPU} ${COMPILE_FLAGS}")
 set(CMAKE_CXX_FLAGS "-mmcu=${MCU} -DF_CPU=${F_CPU} ${COMPILE_FLAGS}")
-set(AVRDUDE_FLAGS "-p${MCU}" "-c${PROGRAMMER}" "-P${PORT}" "-b${BAUDRATE}")
+set(AVRDUDE_FLAGS "-p${MCU}" "-c${PROGRAMMER}" "-P${PORT}" "-b${BAUDRATE}" "${PROGRAMMER_FLAGS}")
 
 add_executable("ledstrip" "test.c")
 add_custom_command(TARGET "ledstrip" POST_BUILD
