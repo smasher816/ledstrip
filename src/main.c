@@ -1,11 +1,11 @@
 #include <avr/io.h>
 #include <avr/wdt.h>
+#include <util/delay.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "uart.h"
 #include "term.h"
-
-#define LED_PIN PORTB1
+#include "led.h"
 
 void version() {
 	println(__DATE__" "__TIME__);
@@ -25,12 +25,8 @@ void ram() {
 }
 
 void reset() {
-	wdt_enable(WDTO_250MS);
+	wdt_enable(WDTO_1S);
 	while (1);
-}
-
-void toggle_led() {
-	PORTB ^= _BV(LED_PIN); //toggle led
 }
 
 int main(void) {
@@ -45,10 +41,14 @@ int main(void) {
 	println("Hello World!");
 	ram();
 
-	DDRB |= _BV(DDB1); //set PB1 to output
+	uint8_t hue = 0;
+	DDRB |= _BV(DDB1) | _BV(DDB2) | _BV(DDB3); //set leds to output
+	led_init();
 
 	term_prompt();
 	while(1) {
 			term_read();
+			setHue(hue++);
+			_delay_ms(10);
 	}
 }

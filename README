@@ -1,3 +1,9 @@
+Setup
+
+Make sure you have avr-gcc, avr-binutils, and avr-libc installed.
+
+After cloning you must run `git submodule update --init`
+
 Compiling
 
 mkdir build
