@@ -22,7 +22,7 @@ void setRGB(uint8_t r, uint8_t g, uint8_t b) {
 	OCR2A = b;
 }
 
-void setHue(uint8_t hue) {
-	CRGB color(CHSV(hue, 255, 255));
+void setHSV(uint8_t hue, uint8_t sat, uint8_t val) {
+	CRGB color(CHSV(hue, sat, val));
 	setRGB(color.r, color.g, color.b);
 }

@@ -6,6 +6,7 @@
 #include "term.h"
 #include "led.h"
 #include "time.h"
+#include "analog.h"
 
 void version() {
 	println(__DATE__" "__TIME__);
@@ -46,14 +47,17 @@ int main(void) {
 	DDRB |= _BV(DDB1) | _BV(DDB2) | _BV(DDB3); //set leds to output
 	led_init();
 
+	analog_init();
+
 	unsigned long oldMillis = 0;
 	unsigned long newMillis;
 	term_prompt();
 	while(1) {
 			term_read();
 			newMillis = millis();
-			if (newMillis>oldMillis+50) {
-				setHue(hue++);
+			uint8_t brightness = analog_sample();
+			if (newMillis>oldMillis+10) {
+				setHSV(hue++, 255, brightness);
 				oldMillis = newMillis;
 			}
 	}

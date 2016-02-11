@@ -1,3 +1,5 @@
+int delay;
+
 void version();
 void ram();
 void reset();
