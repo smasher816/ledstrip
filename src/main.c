@@ -55,9 +55,10 @@ int main(void) {
 	while(1) {
 			term_read();
 			newMillis = millis();
-			uint8_t brightness = analog_sample();
+			uint8_t brightness = analog_sample1();
+			uint8_t saturation = analog_sample2();
 			if (newMillis>oldMillis+10) {
-				setHSV(hue++, 255, brightness);
+				setHSV(hue++, saturation, brightness);
 				oldMillis = newMillis;
 			}
 	}
