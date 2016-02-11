@@ -16,7 +16,7 @@
 #define VT_BS "\e[D \e[D"
 #define TERM_PROMPT "\e[1;36m> \e[0m"
 
-typedef void (*CommandHandler)(void);
+typedef void (*CommandHandler)(int argc, char *argv[]);
 typedef struct {
 	const char *name;
 	CommandHandler handler;

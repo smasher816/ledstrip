@@ -4,6 +4,7 @@
 #include "command.h"
 
 #define BUFFER_SIZE 16
+#define MAX_PARAMS 3
 #define ARRAYLEN(a) (sizeof(a)/sizeof(a[0]))
 
 char buffer[BUFFER_SIZE];
@@ -17,9 +18,15 @@ void term_help() {
 }
 
 void term_process() {
+	int argc;
+	char *cmd, *argv[MAX_PARAMS];
+
+	cmd = strtok(buffer, " ");
+	for (argc=0; (argv[argc]=strtok(NULL, " "))!=NULL; argc++);
+
 	for(unsigned int i=0; i<ARRAYLEN(commands); i++) {
-		if (strcmp_P(buffer, commands[i].name)==0) {
-			commands[i].handler();
+		if (strcmp_P(cmd, commands[i].name)==0) {
+			commands[i].handler(argc, argv);
 			return;
 		}
 	}
