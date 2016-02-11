@@ -1,11 +1,11 @@
 #include <avr/io.h>
 #include <avr/wdt.h>
-#include <util/delay.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "uart.h"
 #include "term.h"
 #include "led.h"
+#include "time.h"
 
 void version() {
 	println(__DATE__" "__TIME__);
@@ -32,6 +32,7 @@ void reset() {
 int main(void) {
 	MCUSR = 0;
 	wdt_disable();
+	timer_init();
 
 	uart_init();
 	stdout = &uart_output;
@@ -45,10 +46,15 @@ int main(void) {
 	DDRB |= _BV(DDB1) | _BV(DDB2) | _BV(DDB3); //set leds to output
 	led_init();
 
+	unsigned long oldMillis = 0;
+	unsigned long newMillis;
 	term_prompt();
 	while(1) {
 			term_read();
-			setHue(hue++);
-			_delay_ms(10);
+			newMillis = millis();
+			if (newMillis>oldMillis+50) {
+				setHue(hue++);
+				oldMillis = newMillis;
+			}
 	}
 }
