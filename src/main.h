@@ -1,6 +1,2 @@
-int delay;
-
-void version();
-void ram();
-void reset();
-void toggle_led();
+#pragma once
+extern int delay;

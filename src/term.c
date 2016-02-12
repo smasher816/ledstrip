@@ -1,11 +1,11 @@
 #include <string.h>
 #include "term.h"
 #include "uart.h"
+#include "print.h"
 #include "command.h"
 
 #define BUFFER_SIZE 16
 #define MAX_PARAMS 3
-#define ARRAYLEN(a) (sizeof(a)/sizeof(a[0]))
 
 char buffer[BUFFER_SIZE];
 int bufpos;

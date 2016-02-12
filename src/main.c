@@ -1,34 +1,15 @@
 #include <avr/io.h>
 #include <avr/wdt.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include "uart.h"
+#include "print.h"
 #include "term.h"
+#include "util.h"
 #include "led.h"
 #include "time.h"
 #include "analog.h"
 
-void version() {
-	println(__DATE__" "__TIME__);
-}
-
-int free_ram() {
-	extern int __heap_start, *__brkval;
-	int stack;
-	int free = (int)&stack - (__brkval==0 ? (int)&__heap_start : (int)__brkval);
-	return free;
-}
-
-void ram() {
-	char s[5];
-	itoa(free_ram(), s, 10);
-	puts(s);
-}
-
-void reset() {
-	wdt_enable(WDTO_1S);
-	while (1);
-}
+int delay = 10;
 
 int main(void) {
 	MCUSR = 0;
@@ -57,7 +38,7 @@ int main(void) {
 			newMillis = millis();
 			uint8_t brightness = analog_sample1();
 			uint8_t saturation = analog_sample2();
-			if (newMillis>oldMillis+10) {
+			if (newMillis>oldMillis+delay) {
 				setHSV(hue++, saturation, brightness);
 				oldMillis = newMillis;
 			}
