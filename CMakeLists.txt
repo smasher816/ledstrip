@@ -12,7 +12,7 @@ set(SERIAL_PORT "/dev/usbserial")
 set(SERIAL_BAUD "115200")
 set(EEPROM "ledstrip.eep")
 
-set(COMPILE_FLAGS "-Os -Wall -Wextra -Werror")
+set(COMPILE_FLAGS "-Os -Wall -Wextra -Werror -fshort-enums")
 set(PROGRAMMER_FLAGS "-V" "-xspifreq=7")
 include_directories("FastLED")
 

@@ -1,6 +1,10 @@
 #include <avr/wdt.h>
 #include <stdlib.h>
 #include "print.h"
+#include "var.h"
+
+#define ARRAYLEN(a) (sizeof(a)/sizeof(a[0]))
+
 
 void version() {
 	println(__DATE__" "__TIME__);
@@ -22,4 +26,46 @@ void ram() {
 void reset() {
 	wdt_enable(WDTO_1S);
 	while (1);
+}
+
+void set(int argc, char *argv[]) {
+	if (argc!=2) {
+		ERR("set <var> <val>");
+		return;
+	}
+	for(unsigned int i=0; i<ARRAYLEN(vars); i++) {
+		if (strcmp_P(argv[0], vars[i].name)==0) {
+			switch (vars[i].type) {
+				case Integer:
+					*vars[i].integer = atoi(argv[1]);
+					break;
+				default:
+					ERR("Unknown type");
+			}
+			return;
+		}
+	}
+	ERR("Unknown variable");
+}
+
+void get(int argc, char *argv[]) {
+	if (argc!=1) {
+		ERR("get <var>");
+		return;
+	}
+	for(unsigned int i=0; i<ARRAYLEN(vars); i++) {
+		if (strcmp_P(argv[0], vars[i].name)==0) {
+			switch (vars[i].type) {
+				case Integer: {
+					char s[6];
+					itoa(*vars[i].integer, s, 10);
+					puts(s);
+					break;
+				}
+				default:
+					ERR("Unknown type");
+			}
+			return;
+		}
+	}
 }
