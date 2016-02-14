@@ -2,6 +2,7 @@
 #include <avr/pgmspace.h>
 #include "term.h"
 #include "util.h"
+#include "settings.h"
 
 #define ARRAYLEN(a) (sizeof(a)/sizeof(a[0]))
 
@@ -20,6 +21,9 @@ const char str_ram[]     PROGMEM = "ram";
 const char str_reset[]   PROGMEM = "reset";
 const char str_set[]     PROGMEM = "set";
 const char str_get[]     PROGMEM = "get";
+const char str_read[]    PROGMEM = "read";
+const char str_write[]   PROGMEM = "write";
+const char str_default[] PROGMEM = "default";
 
 Command commands[] = {
 	{str_help,    term_help},
@@ -29,4 +33,7 @@ Command commands[] = {
 	{str_reset,   reset},
 	{str_set,     set},
 	{str_get,     get},
+	{str_read,    settings_read},
+	{str_write,   settings_write},
+	{str_default, settings_reset},
 };

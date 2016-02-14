@@ -10,7 +10,6 @@ set(PROGRAMMER_PORT "/dev/buspirate")
 set(PROGRAMMER_BAUD "115200")
 set(SERIAL_PORT "/dev/usbserial")
 set(SERIAL_BAUD "115200")
-set(EEPROM "ledstrip.eep")
 
 set(COMPILE_FLAGS "-Os -Wall -Wextra -Werror -fshort-enums")
 set(PROGRAMMER_FLAGS "-V" "-xspifreq=7")
@@ -26,17 +25,18 @@ set(AVRDUDE_FLAGS "-p${MCU}" "-c${PROGRAMMER}" "-P${PROGRAMMER_PORT}" "-b${PROGR
 file(GLOB_RECURSE SRC_FILES "src/*.c" "src/*.cpp")
 add_executable("ledstrip" ${SRC_FILES} "FastLED/hsv2rgb.cpp")
 add_custom_command(TARGET "ledstrip" POST_BUILD
-	COMMAND avr-objcopy -O ihex -R .eeprom ledstrip ledstrip.hex
 	COMMAND avr-size --format=avr --mcu=${MCU} ledstrip
 )
 
 add_custom_target(upload
+	COMMAND avr-objcopy -O ihex -R .eeprom ledstrip ledstrip.hex
 	COMMAND avrdude ${AVRDUDE_FLAGS} -U flash:w:ledstrip.hex:i
 	DEPENDS ledstrip
 )
 add_custom_target(eeprom
-	COMMAND avrdude ${AVRDUDE_FLAGS} -U eeprom:w:${EEPROM}:i
-	DEPENDS ledstrip.eep
+	COMMAND avr-objcopy -O ihex -j .eeprom --change-section-lma .eeprom=0 ledstrip ledstrip.eep
+	COMMAND avrdude ${AVRDUDE_FLAGS} -U eeprom:w:ledstrip.eep:i
+	DEPENDS ledstrip
 )
 add_custom_target(fuses
 	COMMAND avrdude ${AVRDUDE_FLAGS} -U efuse:w:0x05:m -U hfuse:w:0xD6:m -U lfuse:w:0xFF:m

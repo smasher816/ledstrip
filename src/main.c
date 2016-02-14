@@ -8,8 +8,7 @@
 #include "led.h"
 #include "time.h"
 #include "analog.h"
-
-int delay = 10;
+#include "settings.h"
 
 int main(void) {
 	MCUSR = 0;
@@ -23,6 +22,8 @@ int main(void) {
 	term_clear();
 	println("Hello World!");
 	ram();
+
+	settings_read();
 
 	uint8_t hue = 0;
 	DDRB |= _BV(DDB1) | _BV(DDB2) | _BV(DDB3); //set leds to output
@@ -38,7 +39,7 @@ int main(void) {
 			newMillis = millis();
 			uint8_t brightness = analog_sample1();
 			uint8_t saturation = analog_sample2();
-			if (newMillis>oldMillis+delay) {
+			if (newMillis>oldMillis+settings.delay) {
 				setHSV(hue++, saturation, brightness);
 				oldMillis = newMillis;
 			}

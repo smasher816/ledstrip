@@ -1,6 +1,6 @@
 #pragma once
 #include <avr/pgmspace.h>
-#include "main.h"
+#include "settings.h"
 
 typedef enum {
 	Integer
@@ -18,6 +18,6 @@ typedef struct {
 const char str_delay[] PROGMEM = "delay";
 
 Var vars[] = {
-	{str_delay, Integer, {&delay}}
+	{str_delay, Integer, {&settings.delay}}
 };
 
