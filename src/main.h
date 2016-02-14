@@ -1,2 +1,2 @@
 #pragma once
-extern int delay;
+extern unsigned long millis;

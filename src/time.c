@@ -46,7 +46,7 @@ void timer_init() {
 	sei();
 }
 
-unsigned long millis()
+unsigned long timer_millis()
 {
    unsigned long m;
    uint8_t oldSREG = SREG;

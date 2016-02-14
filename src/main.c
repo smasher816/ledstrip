@@ -10,6 +10,39 @@
 #include "analog.h"
 #include "settings.h"
 
+unsigned long millis;
+
+void mode_static() {
+	uint8_t hue = analog_sample1();
+	int8_t brightness = analog_sample2();
+	setHSV(hue, 255, brightness);
+}
+
+void mode_cycle() {
+	static uint8_t hue = 0;
+	static unsigned long lastMillis = 0;
+
+	uint8_t brightness = analog_sample1();
+	uint8_t saturation = analog_sample2();
+
+	if (millis>lastMillis+settings.delay) {
+		setHSV(hue++, saturation, brightness);
+		lastMillis = millis;
+	}
+}
+
+enum Modes {
+	MODE_STATIC,
+	MODE_CYCLE,
+	MODE_LAST
+};
+
+typedef void (*ModeHandler)(void);
+ModeHandler modes[] = {
+	mode_static,
+	mode_cycle
+};
+
 int main(void) {
 	MCUSR = 0;
 	wdt_disable();
@@ -25,23 +58,28 @@ int main(void) {
 
 	settings_read();
 
-	uint8_t hue = 0;
 	DDRB |= _BV(DDB1) | _BV(DDB2) | _BV(DDB3); //set leds to output
 	led_init();
-
 	analog_init();
 
-	unsigned long oldMillis = 0;
-	unsigned long newMillis;
+	static uint8_t oldBtnState = 0;
+
 	term_prompt();
 	while(1) {
 			term_read();
-			newMillis = millis();
-			uint8_t brightness = analog_sample1();
-			uint8_t saturation = analog_sample2();
-			if (newMillis>oldMillis+settings.delay) {
-				setHSV(hue++, saturation, brightness);
-				oldMillis = newMillis;
+
+			uint8_t btnState = PINB & _BV(PB0);
+			if (btnState != oldBtnState) {
+				if (btnState) {
+					settings.mode++;
+					if (settings.mode == MODE_LAST) {
+						settings.mode = 0;
+					}
+				}
+				oldBtnState = btnState;
 			}
+
+			millis = timer_millis();
+			modes[settings.mode]();
 	}
 }

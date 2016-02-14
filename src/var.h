@@ -15,9 +15,11 @@ typedef struct {
 } Var;
 
 
+const char str_mode[]  PROGMEM = "mode";
 const char str_delay[] PROGMEM = "delay";
 
 Var vars[] = {
+	{str_mode,  Integer, {&settings.mode}},
 	{str_delay, Integer, {&settings.delay}}
 };
 
