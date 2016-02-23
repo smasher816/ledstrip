@@ -64,6 +64,10 @@ int main(void) {
 
 	static uint8_t oldBtnState = 0;
 
+	rgb_t correction = {0xFF,0xFF,0xFF};
+	rgb_t temperature = {0xFF,0xFF,0xFF};
+	setAdjustment(255, &correction, &temperature);
+
 	term_prompt();
 	while(1) {
 			term_read();

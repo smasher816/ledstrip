@@ -3,10 +3,13 @@
 #include "pixeltypes.h"
 #include "colorutils.h"
 #include "colorpalettes.h"
+#include "controller.h"
 
 extern "C" {
 	#include "led.h"
 }
+
+static CRGB scalingAdjust(255,255,255);
 
 void led_init() {
 	//Non inverting, Mode 3 FAST PWM. No prescaling: OC1A, OC1B, OC2A
@@ -16,13 +19,23 @@ void led_init() {
 	TCCR2B = _BV(CS20);
 }
 
+void setRGB(const CRGB& color) {
+	CRGB correctedColor = color.scale8(scalingAdjust);
+	OCR1A = correctedColor.r;
+	OCR1B = correctedColor.g;
+	OCR2A = correctedColor.b;
+}
+
 void setRGB(uint8_t r, uint8_t g, uint8_t b) {
-	OCR1A = r;
-	OCR1B = g;
-	OCR2A = b;
+	CRGB color(r,g,b);
+	setRGB(color);
 }
 
 void setHSV(uint8_t hue, uint8_t sat, uint8_t val) {
 	CRGB color(CHSV(hue, sat, val));
-	setRGB(color.r, color.g, color.b);
+	setRGB(color);
+}
+
+void setAdjustment(uint8_t brightness, rgb_t* correction, rgb_t* temperature) {
+	scalingAdjust = CLEDController::computeAdjustment(brightness, *((CRGB*)correction), *((CRGB*)temperature));
 }
