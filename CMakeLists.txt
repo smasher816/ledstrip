@@ -23,9 +23,15 @@ set(CMAKE_CXX_FLAGS "-mmcu=${MCU} -DF_CPU=${F_CPU} -DBAUD=${SERIAL_BAUD} ${COMPI
 set(AVRDUDE_FLAGS "-p${MCU}" "-c${PROGRAMMER}" "-P${PROGRAMMER_PORT}" "-b${PROGRAMMER_BAUD}" "${PROGRAMMER_FLAGS}")
 
 file(GLOB_RECURSE SRC_FILES "src/*.c" "src/*.cpp")
-add_executable("ledstrip" ${SRC_FILES} "FastLED/hsv2rgb.cpp")
+add_executable("ledstrip" ${SRC_FILES} "tags" "FastLED/hsv2rgb.cpp")
 add_custom_command(TARGET "ledstrip" POST_BUILD
 	COMMAND avr-size --format=avr --mcu=${MCU} ledstrip
+)
+
+set_source_files_properties("tags" PROPERTIES GENERATED true)
+add_custom_command(OUTPUT "tags"
+	COMMAND ctags -R src
+	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
 
 add_custom_target(upload
