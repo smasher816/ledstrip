@@ -50,7 +50,7 @@ int main(void) {
 
 	uart_init();
 	stdout = &uart_output;
-    stdin  = &uart_input;
+	stdin  = &uart_input;
 
 	term_clear();
 	println("Hello World!");

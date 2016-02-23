@@ -10,7 +10,7 @@ void uart_init(void);
 int uart_putchar(char, FILE *);
 int uart_getchar(FILE *stream);
 static inline int uart_available() {
-    return bit_is_set(UCSR0A, RXC0);
+	return bit_is_set(UCSR0A, RXC0);
 }
 
 extern FILE uart_output;
