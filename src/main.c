@@ -9,6 +9,9 @@
 #include "time.h"
 #include "analog.h"
 #include "settings.h"
+#include "msgeq7.h"
+
+#define FPS2MS(x) (1000/x)
 
 unsigned long millis;
 
@@ -31,16 +34,33 @@ void mode_cycle() {
 	}
 }
 
-enum Modes {
-	MODE_STATIC,
-	MODE_CYCLE,
-	MODE_LAST
-};
+void mode_music() {
+	static unsigned long lastMillis = 0;
+	if (millis>lastMillis+FPS2MS(settings.music_fps)) {
+		msgeq7_read();
+
+		uint8_t hue = analog_sample1();
+		uint8_t min = analog_sample2();
+
+		uint16_t vol =f[settings.music_frequency][CHANNEL_LEFT];
+		if (vol <= settings.msgeq7_min)
+			vol = 0;
+
+		vol = min + vol*(settings.music_sensitivity/100.0);
+		if (vol > 255)
+			vol = 255;
+
+		setHSV(hue, 255, vol);
+		lastMillis = millis;
+	}
+
+}
 
 typedef void (*ModeHandler)(void);
 ModeHandler modes[] = {
 	mode_static,
-	mode_cycle
+	mode_cycle,
+	mode_music
 };
 
 int main(void) {
@@ -58,9 +78,10 @@ int main(void) {
 
 	settings_read();
 
-	DDRB |= _BV(DDB1) | _BV(DDB2) | _BV(DDB3); //set leds to output
-	led_init();
 	analog_init();
+	analog_start();
+	msgeq7_init();
+	led_init();
 
 	static uint8_t oldBtnState = 0;
 

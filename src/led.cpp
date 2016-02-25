@@ -12,6 +12,9 @@ extern "C" {
 static CRGB scalingAdjust(255,255,255);
 
 void led_init() {
+	//set leds to output
+	DDRB |= _BV(DDB1) | _BV(DDB2) | _BV(DDB3);
+
 	//Non inverting, Mode 3 FAST PWM. No prescaling: OC1A, OC1B, OC2A
 	TCCR1A = _BV(COM1A1) | _BV(COM1B1) | _BV(WGM11) | _BV(WGM10);
 	TCCR1B = _BV(CS10);
