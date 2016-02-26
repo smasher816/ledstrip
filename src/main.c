@@ -12,24 +12,21 @@
 #include "msgeq7.h"
 
 #define FPS2MS(x) (1000/x)
+#define MAX(x) ((1<<(8*sizeof(x)))-1)
+#define SCALE(x,min,max) (min+x*(max-min)/MAX(x))
 
 unsigned long millis;
 
 void mode_static() {
-	uint8_t hue = analog_sample1();
-	int8_t brightness = analog_sample2();
-	setHSV(hue, 255, brightness);
+	setHSV(settings.hue, settings.saturation, settings.brightness);
 }
 
 void mode_cycle() {
 	static uint8_t hue = 0;
 	static unsigned long lastMillis = 0;
 
-	uint8_t brightness = analog_sample1();
-	uint8_t saturation = analog_sample2();
-
 	if (millis>lastMillis+settings.delay) {
-		setHSV(hue++, saturation, brightness);
+		setHSV(hue++, settings.saturation, settings.brightness);
 		lastMillis = millis;
 	}
 }
@@ -39,18 +36,15 @@ void mode_music() {
 	if (millis>lastMillis+FPS2MS(settings.music_fps)) {
 		msgeq7_read();
 
-		uint8_t hue = analog_sample1();
-		uint8_t min = analog_sample2();
-
 		uint16_t vol =f[settings.music_frequency][CHANNEL_LEFT];
 		if (vol <= settings.msgeq7_min)
 			vol = 0;
 
-		vol = min + vol*(settings.music_sensitivity/100.0);
+		vol = settings.music_min_brightness + vol*(settings.music_sensitivity/100.0);
 		if (vol > 255)
 			vol = 255;
 
-		setHSV(hue, 255, vol);
+		setHSV(settings.hue, settings.saturation, vol);
 		lastMillis = millis;
 	}
 
@@ -85,9 +79,7 @@ int main(void) {
 
 	static uint8_t oldBtnState = 0;
 
-	rgb_t correction = {0xFF,0xFF,0xFF};
-	rgb_t temperature = {0xFF,0xFF,0xFF};
-	setAdjustment(255, &correction, &temperature);
+	setAdjustment(255, &settings.correction, &settings.temperature);
 
 	term_prompt();
 	while(1) {
@@ -96,15 +88,19 @@ int main(void) {
 			uint8_t btnState = PINB & _BV(PB0);
 			if (btnState != oldBtnState) {
 				if (btnState) {
-					settings.mode++;
-					if (settings.mode == MODE_LAST) {
-						settings.mode = 0;
+					settings.preset++;
+					if (settings.preset == settings.preset_count) {
+						settings.preset = 0;
 					}
+					settings_preset(settings.preset);
 				}
 				oldBtnState = btnState;
 			}
 
+			*preset.input1.var = (uint8_t)SCALE(analog_sample1(), preset.input1.min, preset.input1.max);
+			*preset.input2.var = (uint8_t)SCALE(analog_sample2(), preset.input2.min, preset.input2.max);
+
 			millis = timer_millis();
-			modes[settings.mode]();
+			modes[preset.mode]();
 	}
 }

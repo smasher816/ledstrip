@@ -14,7 +14,7 @@ typedef struct {
 } Var;
 
 
-const char str_mode[]  PROGMEM = "mode";
+const char str_mode[]  PROGMEM = "preset";
 const char str_hue[]   PROGMEM = "hue";
 const char str_delay[] PROGMEM = "delay";
 const char str_min[]   PROGMEM = "min";
@@ -23,7 +23,7 @@ const char str_fps[]   PROGMEM = "fps";
 const char str_sens[]  PROGMEM = "sens";
 
 Var vars[] = {
-	{str_mode,  Byte,    &settings.mode},
+	{str_mode,  Byte,    &settings.preset},
 	{str_hue,   Byte,    &settings.hue},
 	{str_delay, Integer, &settings.delay},
 	{str_min,   Byte,    &settings.msgeq7_min},
