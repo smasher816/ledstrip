@@ -19,7 +19,7 @@ void settings_read() {
 	settings_preset(settings.preset);
 }
 
-void settings_preset(int i) {
+void settings_preset(uint8_t i) {
 	eeprom_read_block(&preset, (void*)(sizeof(Settings)+i*sizeof(Preset)), sizeof(Preset));
 }
 

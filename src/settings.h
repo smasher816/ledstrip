@@ -54,6 +54,6 @@ extern Settings settings;
 extern Preset preset;
 
 void settings_read();
-void settings_preset(int i);
+void settings_preset(uint8_t i);
 void settings_write();
 void settings_reset();

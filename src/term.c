@@ -2,40 +2,35 @@
 #include "term.h"
 #include "uart.h"
 #include "print.h"
-#include "command.h"
+#include "commands.h"
 
 #define BUFFER_SIZE 16
 #define MAX_PARAMS 3
 
 char buffer[BUFFER_SIZE];
-int bufpos;
+uint8_t bufpos;
 
 void term_help() {
 	println("Valid commands are:");
-	for(unsigned int i=0; i<ARRAYLEN(commands); i++) {
-		puts_P(commands[i].name);
-	}
+	list_commands();
 }
 
 void term_process() {
-	int argc;
+	uint8_t argc;
 	char *cmd, *argv[MAX_PARAMS];
 
 	cmd = strtok(buffer, " ");
+	puts(cmd);
 	for (argc=0; (argv[argc]=strtok(NULL, " "))!=NULL; argc++);
 
-	for(unsigned int i=0; i<ARRAYLEN(commands); i++) {
-		if (strcmp_P(cmd, commands[i].name)==0) {
-			commands[i].handler(argc, argv);
-			return;
-		}
+	if (!command_exec(cmd, argc, argv)) {
+		ERR("Unknown command");
 	}
-	ERR("Unknown command");
 }
 
 void term_read() {
 	char c;
-	static int k = 0;
+	static uint8_t k = 0;
 	while (uart_available()) {
 		c = getchar();
 		//Handle escape sequences
