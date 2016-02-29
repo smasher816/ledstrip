@@ -5,11 +5,13 @@
 #include "colorpalettes.h"
 #include "controller.h"
 
+
 extern "C" {
 	#include "led.h"
 }
 
 static CRGB scalingAdjust(255,255,255);
+static uint8_t brightness = 255;
 
 void led_init() {
 	//set leds to output
@@ -23,7 +25,8 @@ void led_init() {
 }
 
 void setRGB(const CRGB& color) {
-	CRGB correctedColor = color.scale8(scalingAdjust);
+	CRGB correctedColor = color;
+	correctedColor.nscale8_video(brightness).scale8(scalingAdjust);
 	OCR1A = correctedColor.r;
 	OCR1B = correctedColor.g;
 	OCR2A = correctedColor.b;
@@ -41,4 +44,8 @@ void setHSV(uint8_t hue, uint8_t sat, uint8_t val) {
 
 void setAdjustment(uint8_t brightness, rgb_t* correction, rgb_t* temperature) {
 	scalingAdjust = CLEDController::computeAdjustment(brightness, *((CRGB*)correction), *((CRGB*)temperature));
+}
+
+void setBrightness(uint8_t b) {
+	brightness = b;
 }

@@ -61,6 +61,8 @@ int main(void) {
 			*preset.input2.var = (uint8_t)SCALE(analog_sample2(), preset.input2.min, preset.input2.max);
 
 			millis = timer_millis();
-			modes[preset.mode]();
+			for (int i=0; i<MODE_COUNT; i++) {
+				mode_handlers[preset.modes[i].mode](&preset.modes[i].config);
+			}
 	}
 }

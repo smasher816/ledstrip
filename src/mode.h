@@ -10,7 +10,12 @@ typedef union {
 	MusicConfig music;
 } Config;
 
-typedef void (*ModeHandler)(void);
+typedef struct {
+	uint8_t mode;
+	Config config;
+} Mode;
+
+typedef void (*ModeHandler)(Config*);
 
 typedef enum {
 	MODE_STATIC,
@@ -19,4 +24,4 @@ typedef enum {
 	MODE_LAST
 } Modes;
 
-extern ModeHandler modes[];
+extern ModeHandler mode_handlers[];

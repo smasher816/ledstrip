@@ -5,22 +5,20 @@
 
 #define FPS2MS(x) (1000/x)
 
-void mode_music() {
-	MusicConfig config = preset.config.music;
-
+void mode_music(Config *config) {
 	static unsigned long lastMillis = 0;
-	if (millis>lastMillis+FPS2MS(config.fps)) {
+	if (millis>lastMillis+FPS2MS(config->music.fps)) {
 		msgeq7_read();
 
-		uint16_t vol =f[config.frequency][CHANNEL_LEFT];
+		uint16_t vol =f[config->music.frequency][CHANNEL_LEFT];
 		if (vol <= settings.msgeq7_min)
 			vol = 0;
 
-		vol = config.min_brightness + vol*(config.sensitivity/100.0);
+		vol = config->music.min_brightness + vol*(config->music.sensitivity/100.0);
 		if (vol > 255)
 			vol = 255;
 
-		setHSV(config.hue, config.saturation, vol);
+		setBrightness(vol);
 		lastMillis = millis;
 	}
 

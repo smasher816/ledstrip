@@ -3,6 +3,6 @@
 #include "settings.h"
 #include "led.h"
 
-void mode_static() {
-	setHSV(preset.config.hsv.hue, preset.config.hsv.saturation, preset.config.hsv.value);
+void mode_static(Config *config) {
+	setHSV(config->hsv.hue, config->hsv.saturation, config->hsv.value);
 }

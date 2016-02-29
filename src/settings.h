@@ -6,6 +6,7 @@
 #include "mode.h"
 
 #define VERSION 1
+#define MODE_COUNT 2
 
 #define SETTINGS_DEFAULTS { \
 	0, \
@@ -17,10 +18,12 @@
 }
 
 #define PRESET_DEFAULTS { \
-	MODE_MUSIC, \
-	{&preset.config.music.hue, 0, 255}, \
-	{&preset.config.music.min_brightness, 50, 100}, \
-	{.music = {255, 255, F_BASS, 30, 100, 10}} \
+	{ \
+		{MODE_STATIC, {.hsv = {0, 255, 255}}}, \
+		{MODE_MUSIC, {.music = {F_BASS, 30, 100, 10}}} \
+	}, \
+	{&preset.modes[0].config.hsv.hue, 0, 255}, \
+	{&preset.modes[1].config.music.min_brightness, 50, 100}, \
 }
 
 typedef struct {
@@ -33,10 +36,9 @@ typedef struct {
 } Settings;
 
 typedef struct {
-	uint8_t mode;
+	Mode modes[MODE_COUNT];
 	Input input1;
 	Input input2;
-	Config config;
 } Preset;
 
 extern Settings settings;
