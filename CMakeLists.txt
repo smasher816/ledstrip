@@ -14,6 +14,8 @@ set(SERIAL_BAUD "115200")
 set(COMPILE_FLAGS "-Os -Wall -Wextra -Werror -fshort-enums")
 set(PROGRAMMER_FLAGS "-V" "-xspifreq=7")
 include_directories("FastLED")
+include_directories("src")
+include_directories("src/mode")
 
 set(CMAKE_C_COMPILER avr-gcc)
 set(CMAKE_CXX_COMPILER avr-g++)

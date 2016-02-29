@@ -15,13 +15,13 @@ const char str_mmin[]  PROGMEM = "bright";
 
 Var vars[] = {
 	{str_mode,  Byte,    &settings.preset},
-	{str_hue,   Byte,    &settings.hue},
-	{str_delay, Integer, &settings.delay},
 	{str_min,   Byte,    &settings.msgeq7_min},
+	/*{str_hue,   Byte,    &settings.hue},
+	{str_delay, Integer, &settings.delay},
 	{str_freq,  Byte,    &settings.music_frequency},
 	{str_fps,   Byte,    &settings.music_fps},
 	{str_sens,  Byte,    &settings.music_sensitivity},
-	{str_mmin,  Byte,    &settings.music_min_brightness}
+	{str_mmin,  Byte,    &settings.music_min_brightness}*/
 };
 
 uint8_t var_count = sizeof(vars)/sizeof(Var);
