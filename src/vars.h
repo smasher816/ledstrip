@@ -11,9 +11,11 @@ typedef struct {
 	void *value;
 } Var;
 
-
-extern Var vars[];
-extern uint8_t var_count;
+typedef struct {
+	const char *name;
+	uint8_t count;
+	Var *vars[];
+} VarGroup;
 
 void var_set(int argc, char *argv[]);
 void var_get(int argc, char *argv[]);

@@ -1,5 +1,6 @@
 #pragma once
 #include <stdint.h>
+#include "vars.h"
 #include "mode/static.h"
 #include "mode/cycle.h"
 #include "mode/music.h"
@@ -25,3 +26,4 @@ typedef enum {
 } Modes;
 
 extern ModeHandler mode_handlers[];
+extern VarGroup mode_vars[];

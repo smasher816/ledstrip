@@ -4,6 +4,7 @@
 #include "input.h"
 #include "led.h"
 #include "mode.h"
+#include "vars.h"
 
 #define VERSION 1
 #define MODE_COUNT 2
@@ -43,6 +44,7 @@ typedef struct {
 
 extern Settings settings;
 extern Preset preset;
+extern VarGroup vars_settings;
 
 void settings_read();
 void settings_preset(uint8_t i);

@@ -5,3 +5,5 @@ typedef struct {
 	uint8_t saturation;
 	uint8_t value;
 } StaticConfig;
+
+extern VarGroup vars_static;

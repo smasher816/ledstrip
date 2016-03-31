@@ -9,3 +9,9 @@ ModeHandler mode_handlers[] = {
 	mode_cycle,
 	mode_music
 };
+
+VarGroup mode_vars[] = {
+	&vars_static,
+	&vars_cycle,
+	&vars_music
+}

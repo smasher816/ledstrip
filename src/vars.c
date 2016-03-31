@@ -4,32 +4,66 @@
 #include "settings.h"
 #include "vars.h"
 
-const char str_mode[]  PROGMEM = "preset";
-const char str_hue[]   PROGMEM = "hue";
+
+/*const char str_hue[]   PROGMEM = "hue";
 const char str_delay[] PROGMEM = "delay";
-const char str_min[]   PROGMEM = "min";
 const char str_freq[]  PROGMEM = "freq";
 const char str_fps[]   PROGMEM = "fps";
 const char str_sens[]  PROGMEM = "sens";
 const char str_mmin[]  PROGMEM = "bright";
 
-Var vars[] = {
-	{str_mode,  Byte,    &settings.preset},
-	{str_min,   Byte,    &settings.msgeq7_min},
-	/*{str_hue,   Byte,    &settings.hue},
-	{str_delay, Integer, &settings.delay},
-	{str_freq,  Byte,    &settings.music_frequency},
-	{str_fps,   Byte,    &settings.music_fps},
-	{str_sens,  Byte,    &settings.music_sensitivity},
-	{str_mmin,  Byte,    &settings.music_min_brightness}*/
-};
+{str_hue,   Byte,    &settings.hue},
+{str_delay, Integer, &settings.delay},
+{str_freq,  Byte,    &settings.music_frequency},
+{str_fps,   Byte,    &settings.music_fps},
+{str_sens,  Byte,    &settings.music_sensitivity},
+{str_mmin,  Byte,    &settings.music_min_brightness}
 
-uint8_t var_count = sizeof(vars)/sizeof(Var);
-
+uint8_t var_count = sizeof(vars)/sizeof(Var);*/
 
 void list_vars() {
-	for(uint8_t i=0; i<var_count; i++) {
-		puts_P(vars[i].name);
+	print(vars_settings.name); print(":\n");
+	for(uint8_t i=0; i<vars_settings.count; i++) {
+		puts_P(&settings+vars_settings.vars[i].offset, argv[1]);
+	}
+	for(uint8_t i=0; i<MODE_COUNT; i++) {
+		uint8_t mode = preset.modes[i].mode;
+		print(mode_vars[mode].name); print(":\n");
+		for(uint8_t j=0; j<mode_vars[mode].count; j++) {
+			puts_P(&preset.config+mode_vars[mode][j].offset, argv[1]);
+		}
+	}
+}
+
+void set(Var *var, char *val) {
+	switch (var.type) {
+		case Integer:
+			*((int*)var.value) = atoi(val);
+			break;
+		case Byte:
+			*((uint8_t*)var.value) = atoi(val);
+			break;
+		default:
+			ERR("Unknown type");
+	}
+}
+
+void get(Var *var, char *val) {
+	switch (var.type) {
+		case Integer: {
+			char s[6];
+			itoa(*((int*)var.value), s, 10);
+			puts(s);
+			break;
+		}
+		case Byte: {
+			char s[4];
+			itoa(*((uint8_t*)var.value), s, 10);
+			puts(s);
+			break;
+		}
+		default:
+			ERR("Unknown type");
 	}
 }
 
@@ -39,18 +73,15 @@ void var_set(int argc, char *argv[]) {
 		list_vars();
 		return;
 	}
-	for(uint8_t i=0; i<var_count; i++) {
-		if (strcmp_P(argv[0], vars[i].name)==0) {
-			switch (vars[i].type) {
-				case Integer:
-					*((int*)vars[i].value) = atoi(argv[1]);
-					break;
-				case Byte:
-					*((uint8_t*)vars[i].value) = atoi(argv[1]);
-					break;
-				default:
-					ERR("Unknown type");
-			}
+	for(uint8_t i=0; i<vars_count_settings; i++) {
+		if (strcmp_P(argv[0], vars_settings[i].name)==0) {
+			set(&settings+vars_settings[i].offset, argv[1]);
+			return;
+		}
+	}
+	for(uint8_t i=0; i<vars_count_presets[0]; i++) {
+		if (strcmp_P(argv[0], vars_presets[0][i].name)==0) {
+			set(&preset+vars_presets[0][i].offset, argv[1]);
 			return;
 		}
 	}
@@ -63,24 +94,15 @@ void var_get(int argc, char *argv[]) {
 		list_vars();
 		return;
 	}
-	for(uint8_t i=0; i<var_count; i++) {
-		if (strcmp_P(argv[0], vars[i].name)==0) {
-			switch (vars[i].type) {
-				case Integer: {
-					char s[6];
-					itoa(*((int*)vars[i].value), s, 10);
-					puts(s);
-					break;
-				}
-				case Byte: {
-					char s[4];
-					itoa(*((uint8_t*)vars[i].value), s, 10);
-					puts(s);
-					break;
-				}
-				default:
-					ERR("Unknown type");
-			}
+	for(uint8_t i=0; i<vars_count_settings; i++) {
+		if (strcmp_P(argv[0], vars_settings[i].name)==0) {
+			set(&settings+vars_settings[i].offset, argv[1]);
+			return;
+		}
+	}
+	for(uint8_t i=0; i<vars_count_presets[0]; i++) {
+		if (strcmp_P(argv[0], vars_presets[0][i].name)==0) {
+			set(&preset+vars_presets[0][i].offset, argv[1]);
 			return;
 		}
 	}

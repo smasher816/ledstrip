@@ -1,4 +1,5 @@
-#include "avr/eeprom.h"
+#include <avr/eeprom.h>
+#include <avr/pgmspace.h>
 #include "settings.h"
 
 typedef struct {
@@ -6,10 +7,25 @@ typedef struct {
 	Preset preset;
 } EEPROM_t;
 
-EEMEM EEPROM_t eeprom = {
+/*EEMEM EEPROM_t eeprom = {
 	SETTINGS_DEFAULTS, \
 	PRESET_DEFAULTS, \
+};*/
+
+
+const char str_settings[]  PROGMEM = "settings";
+const char str_preset[]  PROGMEM = "preset";
+const char str_min[]   PROGMEM = "min";
+
+VarGroup vars_settings = {
+	str_settings,
+	2,
+	{
+		{str_preset, Byte, &settings.preset},
+		{str_min,    Byte, &settings.msgeq7_min}
+	}
 };
+
 
 Settings settings;
 Preset preset;
