@@ -10,6 +10,7 @@ extern "C" {
 	#include "led.h"
 }
 
+static CRGB currentColor;
 static CRGB scalingAdjust(255,255,255);
 static uint8_t brightness = 255;
 
@@ -24,12 +25,16 @@ void led_init() {
 	TCCR2B = _BV(CS20);
 }
 
-void setRGB(const CRGB& color) {
-	CRGB correctedColor = color;
+void led_show() {
+	CRGB correctedColor = currentColor;
 	correctedColor.nscale8_video(brightness).scale8(scalingAdjust);
 	OCR1A = correctedColor.r;
 	OCR1B = correctedColor.g;
 	OCR2A = correctedColor.b;
+}
+
+void setRGB(const CRGB& color) {
+	currentColor = color;
 }
 
 void setRGB(uint8_t r, uint8_t g, uint8_t b) {

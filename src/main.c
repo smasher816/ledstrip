@@ -64,5 +64,6 @@ int main(void) {
 			for (int i=0; i<MODE_COUNT; i++) {
 				mode_handlers[preset.modes[i].mode](&preset.modes[i].config);
 			}
+			led_show();
 	}
 }
