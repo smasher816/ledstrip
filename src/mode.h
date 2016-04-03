@@ -18,9 +18,11 @@ typedef struct {
 typedef void (*ModeHandler)(Config*);
 
 typedef enum {
+	MODE_NONE,
 	MODE_STATIC,
 	MODE_CYCLE,
 	MODE_MUSIC,
+	MODE_BEAT,
 	MODE_LAST
 } Modes;
 

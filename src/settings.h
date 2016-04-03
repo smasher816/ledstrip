@@ -17,9 +17,19 @@
 	20 \
 }
 
+/*
 #define PRESET_DEFAULTS { \
 	{ \
 		{MODE_STATIC, {.hsv = {0, 255, 255}}}, \
+		{MODE_MUSIC, {.music = {F_BASS, 30, 100, 10}}} \
+	}, \
+	{&preset.modes[0].config.hsv.hue, 0, 255}, \
+	{&preset.modes[1].config.music.min_brightness, 50, 100}, \
+}*/
+
+#define PRESET_DEFAULTS { \
+	{ \
+		{MODE_BEAT, {.music = {F_BASS, 30, 100, 10}}}, \
 		{MODE_MUSIC, {.music = {F_BASS, 30, 100, 10}}} \
 	}, \
 	{&preset.modes[0].config.hsv.hue, 0, 255}, \
