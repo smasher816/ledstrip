@@ -1,6 +1,7 @@
 #include <avr/io.h>
 #include <avr/wdt.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "uart.h"
 #include "print.h"
 #include "term.h"
@@ -11,9 +12,22 @@
 #include "settings.h"
 #include "msgeq7.h"
 #include "mode.h"
+#include "ssd1306.h"
 
 #define MAX(x) ((1<<(8*sizeof(x)))-1)
 #define SCALE(x,min,max) (min+x*(max-min)/MAX(x))
+
+char entries[][16] = {
+  "Hello World",
+  "OLED's are cool",
+  "Foo",
+  "Bar",
+  "Something",
+  "Rotary Encoder",
+  "255,255,255",
+  "#FFAABB"
+};
+int currentIndex = 2;
 
 unsigned long millis;
 
@@ -43,7 +57,7 @@ int main(void) {
 	wdt_disable();
 	timer_init();
 
-	uart_init();
+	/*uart_init();
 	stdout = &uart_output;
 	stdin  = &uart_input;
 
@@ -57,18 +71,47 @@ int main(void) {
 	analog_start();
 	enc_init();
 	msgeq7_init();
-	led_init();
+	led_init();*/
 
+	oled_init();
+	oled_clear();
+
+	char s[10] = {' ',' ',' ',' ',' ',' ',' ',' ',' ','\0'};
+	int frames = 0;
+	unsigned long lastUpdate = 0;
 	static uint8_t oldBtnState = 0;
 	static uint8_t counter = 100;
 
-	setAdjustment(settings.brightness, &settings.correction, &settings.temperature);
+	//setAdjustment(settings.brightness, &settings.correction, &settings.temperature);
 
-	term_prompt();
+	//term_prompt();
 	while(1) {
-			term_read();
+			//term_read();
 
-			uint8_t btnState = PINB & _BV(PB0);
+			////
+			frames++;
+			unsigned long millis = timer_millis();
+			if (millis-lastUpdate > 1000) {
+				itoa(frames, s, 10);
+				frames = 0;
+				lastUpdate = millis;
+			}
+
+			oled_move(0,0);
+			oled_puts(s);
+
+			for (int i=0; i<7; i++) {
+				oled_move(i+1,0);
+				if (i == currentIndex) {
+					oled_putc('>');
+				} else {
+					oled_putc(' ');
+				}
+				oled_puts(entries[i]);
+			}
+			////
+
+			/*uint8_t btnState = PINB & _BV(PB0);
 			if (btnState != oldBtnState) {
 				if (btnState) {
 					settings.preset++;
@@ -92,6 +135,6 @@ int main(void) {
 			millis = timer_millis();
 			for (int i=0; i<MODE_COUNT; i++) {
 				mode_handlers[preset.modes[i].mode](&preset.modes[i].config);
-			}
+			}*/
 	}
 }
